@@ -53,8 +53,16 @@ namespace Connect4
         }
     }
     //Move class
+    public class Move
+    { 
+        
+    }
 
     //check win class
+    public class CheckWin
+    { 
+    
+    }
 
     internal class Program
     {
