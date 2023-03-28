@@ -21,7 +21,7 @@ namespace Connect4
         }
         public void PrintBoard()
         {
-            Console.WriteLine("  1 2 3 4 5 6 7");
+            Console.WriteLine(" 1 2 3 4 5 6 7");
             for (int i = 0; i < 6; i++)
             {
                 Console.Write("|");
@@ -69,7 +69,6 @@ namespace Connect4
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             //make board object
             Board board = new Board();
             board.PrintBoard();
