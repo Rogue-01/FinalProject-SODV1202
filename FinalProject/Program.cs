@@ -81,14 +81,16 @@ namespace Connect4
     //Move class
     public class Move
     {
-        public int Column { get; }
-
+        private int column;
         public Move(int column)
         {
-            Column = column;
+            this.column = column;
+        }
+        public int Column
+        {
+            get { return column; }
         }
     }
-
     //check win class
     public class CheckWin
     {
@@ -294,50 +296,37 @@ namespace Connect4
             //create player objects
             Player player1 = new Player(name1, symbol1);
             Player player2 = new Player(name2, symbol2);
-            //create move objects
+            //ask player where they want to move
             Move move;
             //create check win object
             CheckWin checkwin = new CheckWin(board, player1, 6, 7, 4);
-
             //loop until win
             bool isPlayer1Turn = true;
             while (true)
             {
-                //Get player Input
-                Player currentPlayer = isPlayer1Turn ? player1 : player2;
-                Console.WriteLine($"{currentPlayer.GetName()}'s turn ({currentPlayer.GetSymbol()}) - enter column (1-7):");
-                int column = int.Parse(Console.ReadLine()) - 1;
-                move = new Move(column);
-
-                //check if move is valid
-                int row = IsWinningMove.GetNextAvailableRow(move.Column);
-                if (row == -1)
+                if (isPlayer1Turn)
                 {
-                    Console.WriteLine("Column is Full. Please chose another column.");
-                    continue;
+                    Console.WriteLine("Player 1, where do you want to move?");
+                    move = new Move(int.Parse(Console.ReadLine()));
+                    if (checkwin.IsWinningMove(move))
+                    {
+                        Console.WriteLine("Player 1 wins!");
+                        break;
+                    }
+                    isPlayer1Turn = false;
                 }
-                //update board and print
-                board.SetCell(row, move.Column, currentPlayer.GetSymbol());
-                board.PrintBoard();
-
-                //check if move is winning move
-                if (checkWin.IsWinningMove(move))
+                else
                 {
-                    Console.WriteLine($"{currentPlayer.GetName()} has won!");
-                    break;
+                    Console.WriteLine("Player 2, where do you want to move?");
+                    move = new Move(int.Parse(Console.ReadLine()));
+                    if (checkwin.IsWinningMove(move))
+                    {
+                        Console.WriteLine("Player 2 wins!");
+                        break;
+                    }
+                    isPlayer1Turn = true;
                 }
-
-                //check if board is full
-                if (board.IsFull())
-                {
-                    Console.WriteLine("Board is full. Game over!");
-                    break;
-                }
-
-                //switch turns
-                isPlayer1Turn = !isPlayer1Turn;
             }
-
             Console.ReadLine();
         }
     }
