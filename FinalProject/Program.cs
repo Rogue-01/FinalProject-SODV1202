@@ -117,6 +117,8 @@ namespace Connect4
             }
 
             board.SetCell(row, move.Column, player.GetSymbol());
+            Console.WriteLine("{0} has played {1}", player.GetName(), move.Column + 1);
+            board.PrintBoard();
 
             if (CheckHorizonatal(row) || CheckVertical(move.Column) || CheckDiagonal1(row, move.Column) || CheckDiagonal2(row, move.Column))
             {
@@ -325,6 +327,7 @@ namespace Connect4
                         break;
                     }
                     isPlayer1Turn = true;
+
                 }
             }
             Console.ReadLine();
