@@ -1,12 +1,40 @@
 ﻿using System;
+using System.Dynamic;
+using System.Reflection;
 
 namespace connectFour
 {
-    internal class Program
+    //Board class
+    public class Board
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
+
     }
+
+    //Player class
+    public abstract class Player
+    {
+
+    }
+    //HumanPlayer
+    public class HumanPlayer : Player
+    {
+
+    }
+    //GameController class
+    public class Controller
+    {
+
+    }
+    //Display
+    public class Display
+    {
+
+    }
+    class Program
+        {
+            static void Main(string[] args)
+            {
+                
+            }
+        }
 }
