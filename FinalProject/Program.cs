@@ -16,60 +16,113 @@ namespace connectFour
     //Board class
     public class Board
     {
-        //Board array
-        private char[,] board = new char[6, 7];
-        public Board()
+        public int[,] board;
+        public int rows;
+        public int columns;
+        public int winLength;
+
+        public Board(int rows, int columns, int winLength)
         {
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
-                    board[i, j] = '#';
-                }
-            }
+            this.rows = rows;
+            this.columns = columns;
+            this.winLength = winLength;
+            board = new int[rows, columns];
         }
+        //print board
         public void PrintBoard()
         {
-            
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < rows; i++)
             {
-                Console.Write("|");
-                for(int column  = 0; column < 7; column++)
+                for (int j = 0; j < columns; j++)
                 {
-                    Console.Write(board[i, column] + "|");
+                    Console.Write(board[i, j] + "#");
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine("|1|2|3|4|5|6|7|");
+        }
+        //adding piece to board
+        public bool AddPiece(int column, int player)
+        {
+            for (int i = rows - 1; i >= 0; i--)
+            {
+                if (board[i, column] == 0)
+                {
+                    board[i, column] = player;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool CheckWIn(int player) 
+        {
+            //check horizontal
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns - winLength; j++)
+                {
+                    if (board[i, j] == player && board[i, j + 1] == player && board[i, j + 2] == player && board[i, j + 3] == player)
+                    {
+                        return true;
+                    }
+                }
+            }
+            //check vertical
+            for (int i = 0; i < rows - winLength; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    if (board[i, j] == player && board[i + 1, j] == player && board[i + 2, j] == player && board[i + 3, j] == player)
+                    {
+                        return true;
+                    }
+                }
+            }
+            //check diagonal
+            for (int i = 0; i < rows - winLength; i++)
+            {
+                for (int j = 0; j < columns - winLength; j++)
+                {
+                    if (board[i, j] == player && board[i + 1, j + 1] == player && board[i + 2, j + 2] == player && board[i + 3, j + 3] == player)
+                    {
+                        return true;
+                    }
+                }
+            }
+            //check other diagonal
+            for (int i = 0; i < rows - winLength; i++)
+            {
+                for (int j = winLength - 1; j < columns; j++)
+                {
+                    if (board[i, j] == player && board[i + 1, j - 1] == player && board[i + 2, j - 2] == player && board[i + 3, j - 3] == player)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
     }
 
     //Player class
-    public abstract class Player
+    abstract class Player
     {
         public string PlayerName { get; set; }
         public char Peice { get; set; }
-
         public abstract int getMove(Board board);
-        public Player(string playerName, char peice)
-        {
-            PlayerName = playerName;
-            Peice = peice;
-        }
     }
     //HumanPlayer
-    public class HumanPlayer : Player
+    class HumanPlayer : Player
     {
-        public HumanPlayer(string playerName, char peice) : base (playerName, peice) { }
-
         public override int getMove(Board board)
         {
-            int column = -1;
-            while (column > -1)
+            Console.WriteLine($"{PlayerName}, make a move (1-6)");
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > board.columns || !board.AddPiece(choice - 1, Peice))
             {
-                
+                Console.WriteLine("Invalid choice. Please choose a valid column:");
             }
+            return choice - 1;
         }
     }
     //GameController class
@@ -84,10 +137,15 @@ namespace connectFour
     }
     class Program
         {
-            static void Main(string[] args)
-            {
-                Board board = new Board();    
-                board.PrintBoard();
-            }
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Connect Four!");
+            // Make board and players
+            Board board = new Board(6, 7, 4);
+            HumanPlayer player1 = new HumanPlayer();
+            HumanPlayer player2 = new HumanPlayer();
+
+            // Make game controller and play game
         }
+    }
 }
