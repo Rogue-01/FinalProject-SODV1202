@@ -16,18 +16,61 @@ namespace connectFour
     //Board class
     public class Board
     {
+        //Board array
+        private char[,] board = new char[6, 7];
+        public Board()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    board[i, j] = '#';
+                }
+            }
+        }
+        public void PrintBoard()
+        {
+            
+            for (int i = 0; i < 6; i++)
+            {
+                Console.Write("|");
+                for(int column  = 0; column < 7; column++)
+                {
+                    Console.Write(board[i, column] + "|");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("|1|2|3|4|5|6|7|");
+        }
 
     }
 
     //Player class
     public abstract class Player
     {
+        public string PlayerName { get; set; }
+        public char Peice { get; set; }
 
+        public abstract int getMove(Board board);
+        public Player(string playerName, char peice)
+        {
+            PlayerName = playerName;
+            Peice = peice;
+        }
     }
     //HumanPlayer
     public class HumanPlayer : Player
     {
+        public HumanPlayer(string playerName, char peice) : base (playerName, peice) { }
 
+        public override int getMove(Board board)
+        {
+            int column = -1;
+            while (column > -1)
+            {
+                
+            }
+        }
     }
     //GameController class
     public class Controller
@@ -43,7 +86,8 @@ namespace connectFour
         {
             static void Main(string[] args)
             {
-                
+                Board board = new Board();    
+                board.PrintBoard();
             }
         }
 }
