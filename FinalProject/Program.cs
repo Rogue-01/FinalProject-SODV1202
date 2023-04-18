@@ -35,7 +35,7 @@ namespace connectFour
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    Console.Write(board[i, j] + "#");
+                    Console.Write(board[i, j] + " ");
                 }
                 Console.WriteLine();
             }
@@ -116,7 +116,7 @@ namespace connectFour
     {
         public override int getMove(Board board)
         {
-            Console.WriteLine($"{PlayerName}, make a move (1-6)");
+            Console.WriteLine($"{PlayerName}, make a move (1-7)");
             int choice;
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > board.columns || !board.AddPiece(choice - 1, Peice))
             {
@@ -128,12 +128,100 @@ namespace connectFour
     //GameController class
     public class Controller
     {
+        private Board board;
+        private Player player1;
+        private Player player2;
 
+        internal Controller(Board board, Player player1, Player player2)
+        {
+            //create board with default values
+            this.board = board;
+            this.player1 = player1;
+            this.player2 = player2;
+        }
+
+        // Run the game
+        public void Run()
+        {
+            int currentPlayer = 1;
+            Player activePlayer = player1;
+            while (true)
+            {
+                Console.Clear();
+                board.PrintBoard();
+                int move = activePlayer.getMove(board);
+                if (board.AddPiece(move, currentPlayer))
+                {
+                    if (board.CheckWIn(currentPlayer))
+                    {
+                        Console.Clear();
+                        board.PrintBoard();
+                        Console.WriteLine($"{activePlayer.PlayerName} wins!");
+                        break;
+                    }
+                    else if (boardIsFull())
+                    {
+                        Console.Clear();
+                        board.PrintBoard();
+                        Console.WriteLine("The game is a draw!");
+                        break;
+                    }
+                    else
+                    {
+                        currentPlayer = currentPlayer == 1 ? 2 : 1;
+                        activePlayer = currentPlayer == 1 ? player1 : player2;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid move. Press any key to try again...");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        // Check if board is full
+        private bool boardIsFull()
+        {
+            for (int i = 0; i < board.columns; i++)
+            {
+                if (board.board[0, i] == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
+
     //Display
     public class Display
     {
-
+        public void ShowBoard(Board board)
+            {
+            Console.Clear();
+            for (int i = 0; i < board.rows; i++)
+                {
+                for (int j = 0; j < board.columns; j++)
+                    {
+                    Console.Write("|");
+                    if (board.board[i, j] == 0)
+                    {
+                        Console.Write(" ");
+                    }
+                    else if (board.board[i, j] == 1)
+                    {
+                        Console.Write("X");
+                    }
+                    else
+                    {
+                    Console.Write("O");
+                    }
+                }
+                Console.WriteLine("|");
+            }
+            Console.WriteLine("---------------");
+        }
     }
     class Program
         {
@@ -142,10 +230,12 @@ namespace connectFour
             Console.WriteLine("Connect Four!");
             // Make board and players
             Board board = new Board(6, 7, 4);
-            HumanPlayer player1 = new HumanPlayer();
-            HumanPlayer player2 = new HumanPlayer();
+            Player player1 = new HumanPlayer() { PlayerName = "Player 1", Peice = 'X' };
+            Player player2 = new HumanPlayer() { PlayerName = "Player 2", Peice = 'O' };
 
             // Make game controller and play game
+            Controller game = new Controller(board, player1, player2);
+            game.Run();
         }
     }
 }
