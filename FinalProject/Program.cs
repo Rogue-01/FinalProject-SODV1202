@@ -8,9 +8,7 @@ using System.Security.Cryptography;
 //Board - This class will represent the game board and hold the current state of the game. It should have methods to check for wins and add pieces to the board.
 //Player - This class will be an abstract base class for the two types of players in the game, human and computer players.It should have methods for getting and setting the player's name, and making moves on the board.
 //HumanPlayer - This class will implement the Player class and represent a human player. It should have a method for getting input from the user to make a move on the board.
-//ComputerPlayer - This class will implement the Player class and represent a computer player. It should have a method for generating a move on the board.
 //GameController - This class will handle the game flow, including creating the board, creating the players, and running the game loop. It should have methods for starting and ending the game, as well as handling player turns and displaying the board.
-//ConsoleView - This class will handle input and output from the console. It should have methods for displaying the game board and getting input from the user.
 namespace connectFour
 {
     //Board class
@@ -140,6 +138,17 @@ namespace connectFour
             this.player2 = player2;
         }
 
+        public void Start()
+        {
+            Console.WriteLine("Welcome to Connect Four!");
+
+            //create board and players
+            board = new Board(6, 7, 4);
+            player1 = new HumanPlayer();
+            player2 = new HumanPlayer();
+            
+            Run();
+        }
         // Run the game
         public void Run()
         {
@@ -157,30 +166,23 @@ namespace connectFour
                         Console.Clear();
                         board.PrintBoard();
                         Console.WriteLine($"{activePlayer.PlayerName} wins!");
-                        break;
+                        EndGame();
+                        return;
                     }
-                    else if (boardIsFull())
+                    if (boardIsFull())
                     {
                         Console.Clear();
                         board.PrintBoard();
-                        Console.WriteLine("The game is a draw!");
-                        break;
+                        Console.WriteLine("It's a tie!");
+                        EndGame();
+                        return;
                     }
-                    else
-                    {
-                        currentPlayer = currentPlayer == 1 ? 2 : 1;
-                        activePlayer = currentPlayer == 1 ? player1 : player2;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid move. Press any key to try again...");
-                    Console.ReadKey();
+                    SwitchPlayers(ref currentPlayer, ref activePlayer);
                 }
             }
         }
 
-        // Check if board is full
+        //cheack if board is full
         private bool boardIsFull()
         {
             for (int i = 0; i < board.columns; i++)
@@ -192,50 +194,35 @@ namespace connectFour
             }
             return true;
         }
-    }
 
-    //Display
-    public class Display
-    {
-        public void ShowBoard(Board board)
-            {
-            Console.Clear();
-            for (int i = 0; i < board.rows; i++)
-                {
-                for (int j = 0; j < board.columns; j++)
-                    {
-                    Console.Write("|");
-                    if (board.board[i, j] == 0)
-                    {
-                        Console.Write(" ");
-                    }
-                    else if (board.board[i, j] == 1)
-                    {
-                        Console.Write("X");
-                    }
-                    else
-                    {
-                    Console.Write("O");
-                    }
-                }
-                Console.WriteLine("|");
-            }
-            Console.WriteLine("---------------");
+        // End the game
+        public void EndGame()
+        {
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
+
+        // Switch players
+        private void SwitchPlayers(ref int currentPlayer, ref Player activePlayer)
+        {
+            currentPlayer = currentPlayer == 1 ? 2 : 1;
+            activePlayer = currentPlayer == 1 ? player1 : player2;
         }
     }
+
     class Program
         {
         static void Main(string[] args)
         {
-            Console.WriteLine("Connect Four!");
-            // Make board and players
+            //start game
             Board board = new Board(6, 7, 4);
             Player player1 = new HumanPlayer() { PlayerName = "Player 1", Peice = 'X' };
             Player player2 = new HumanPlayer() { PlayerName = "Player 2", Peice = 'O' };
 
-            // Make game controller and play game
-            Controller game = new Controller(board, player1, player2);
-            game.Run();
+            Controller controller = new Controller(board, player1, player2);
+            controller.Start();
+            
+            
         }
     }
 }
