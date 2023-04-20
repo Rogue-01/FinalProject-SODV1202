@@ -1,5 +1,6 @@
 ﻿using connectFour;
 using System;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Reflection;
 using System.Reflection.Metadata;
@@ -51,52 +52,92 @@ namespace connectFour
             }
             return false;
         }
-        public bool CheckWIn(int player) 
+        public bool CheckWin(int player)
         {
             //check horizontal
             for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < columns - winLength; j++)
+                for (int j = 0; j < columns - winLength + 1; j++)
                 {
-                    if (board[i, j] == player && board[i, j + 1] == player && board[i, j + 2] == player && board[i, j + 3] == player)
+                    bool hasWon = true;
+                    for (int k = 0; k < winLength; k++)
+                    {
+                        if (board[i, j + k] != player)
+                        {
+                            hasWon = false;
+                            break;
+                        }
+                    }
+                    if (hasWon)
                     {
                         return true;
                     }
                 }
             }
+
             //check vertical
-            for (int i = 0; i < rows - winLength; i++)
+            for (int i = 0; i < rows - winLength + 1; i++)
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    if (board[i, j] == player && board[i + 1, j] == player && board[i + 2, j] == player && board[i + 3, j] == player)
+                    bool hasWon = true;
+                    for (int k = 0; k < winLength; k++)
+                    {
+                        if (board[i + k, j] != player)
+                        {
+                            hasWon = false;
+                            break;
+                        }
+                    }
+                    if (hasWon)
                     {
                         return true;
                     }
                 }
             }
+
             //check diagonal
-            for (int i = 0; i < rows - winLength; i++)
+            for (int i = 0; i < rows - winLength + 1; i++)
             {
-                for (int j = 0; j < columns - winLength; j++)
+                for (int j = 0; j < columns - winLength + 1; j++)
                 {
-                    if (board[i, j] == player && board[i + 1, j + 1] == player && board[i + 2, j + 2] == player && board[i + 3, j + 3] == player)
+                    bool hasWon = true;
+                    for (int k = 0; k < winLength; k++)
+                    {
+                        if (board[i + k, j + k] != player)
+                        {
+                            hasWon = false;
+                            break;
+                        }
+                    }
+                    if (hasWon)
                     {
                         return true;
                     }
                 }
             }
+
             //check other diagonal
-            for (int i = 0; i < rows - winLength; i++)
+            for (int i = 0; i < rows - winLength + 1; i++)
             {
                 for (int j = winLength - 1; j < columns; j++)
                 {
-                    if (board[i, j] == player && board[i + 1, j - 1] == player && board[i + 2, j - 2] == player && board[i + 3, j - 3] == player)
+                    bool hasWon = true;
+                    for (int k = 0; k < winLength; k++)
+                    {
+                        if (board[i + k, j - k] != player)
+                        {
+                            hasWon = false;
+                            break;
+                        }
+                    }
+                    if (hasWon)
                     {
                         return true;
                     }
                 }
             }
+
             return false;
         }
 
@@ -114,7 +155,9 @@ namespace connectFour
     {
         public override int getMove(Board board)
         {
-            Console.WriteLine($"{PlayerName}, make a move (1-7)");
+            //tell player to make a move
+            Console.WriteLine($"{PlayerName}, it is your turn. Please choose a column:");
+
             int choice;
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > board.columns || !board.AddPiece(choice - 1, Peice))
             {
@@ -161,7 +204,7 @@ namespace connectFour
                 int move = activePlayer.getMove(board);
                 if (board.AddPiece(move, currentPlayer))
                 {
-                    if (board.CheckWIn(currentPlayer))
+                    if (board.CheckWin(currentPlayer))
                     {
                         Console.Clear();
                         board.PrintBoard();
