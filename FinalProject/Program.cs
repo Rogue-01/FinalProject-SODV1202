@@ -155,9 +155,7 @@ namespace connectFour
     {
         public override int getMove(Board board)
         {
-            //tell player to make a move
-            Console.WriteLine($"{PlayerName} it is your turn. Please choose a column:");
-
+            Console.WriteLine($"{PlayerName} make a move (1-7)");
             int choice;
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > board.columns || !board.AddPiece(choice - 1, Peice))
             {
@@ -187,9 +185,9 @@ namespace connectFour
 
             //create board and players
             board = new Board(6, 7, 4);
-            player1 = new HumanPlayer();
-            player2 = new HumanPlayer();
-            
+            Player player1 = new HumanPlayer() { PlayerName = "Player 1"};
+            Player player2 = new HumanPlayer() { PlayerName = "Player 2"};
+
             Run();
         }
         // Run the game
@@ -259,8 +257,8 @@ namespace connectFour
         {
             //start game
             Board board = new Board(6, 7, 4);
-            Player player1 = new HumanPlayer() { PlayerName = "Player 1", Peice = 'X' };
-            Player player2 = new HumanPlayer() { PlayerName = "Player 2", Peice = 'O' };
+            Player player1 = new HumanPlayer() { PlayerName = "Player 1" };
+            Player player2 = new HumanPlayer() { PlayerName = "Player 2" };
 
             Controller controller = new Controller(board, player1, player2);
             controller.Start();
